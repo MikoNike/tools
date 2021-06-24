@@ -27,4 +27,3 @@ logfile = os.popen('find %s -mtime -3 -type f'%(log_dir)).readlines()
 for i in logfile:
     bucket.put_object_from_file('%s/%s'%(Bucket_dir,os.path.basename(i)), i.replace('\n',''))
     print i + '文件已上传'
-
