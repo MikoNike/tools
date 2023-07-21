@@ -54,21 +54,28 @@ net.core.netdev_max_backlog = 262144
 net.ipv4.tcp_max_orphans = 3276800  
 net.ipv4.tcp_max_syn_backlog = 262144  
 net.core.wmem_default = 8388608  
-net.core.rmem_default = 8388608  
+net.core.rmem_default = 8388608
+# 修改信号量  
+kernel.sem = 300 32000 100 1024
+fs.file-max = 65536
 EOF
 
 /sbin/sysctl -p
 
 \cp /etc/security/limits.conf /etc/security/limits.conf.$(date +%F)
+
+cat >> /etc/profile << EOF
 ulimit -HSn 65535
-echo -ne "
-* soft nofile 65535
-* hard nofile 65535
-" >>/etc/security/limits.conf
+EOF
 
-echo "ulimit -c unlimited" >> /etc/profile
+cat >> /etc/security/limits.conf << EOF
+* soft nproc 65536
+* hard nproc 65536
+* soft nofile 65536
+* hard nofile 65536
+EOF
+
 source /etc/profile
-
 }
 
 #修改shell命令的history 记录个数和连接超时时间
